@@ -1,0 +1,86 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+
+{% block title %} Employee List {% endblock title %}
+
+{% block content %}
+  <div class="header bg-primary pb-6">
+    <div class="container-fluid">
+      <div class="header-body">
+        <div class="row align-items-center py-4">
+          <div class="col-lg-6 col-7">
+            <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+              <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                <li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
+                <li class="breadcrumb-item"><a href="#">Employee</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Shedule</li>
+              </ol>
+            </nav>
+          </div>
+         </div>
+      </div>
+   </div>
+</div>
+
+
+
+<div class="container-fluid ">
+    <div class="row">
+      <div class="col">
+  
+        <form method="post">
+            {% csrf_token %}
+            
+
+            <div class="form-check">
+                <label class="form-check-label">
+                {{form.monday_1}} Monday
+
+                </label>
+            </div>
+            <div class="form-check">
+                <label class="form-check-label">
+                {{form.tuesday_1}} Tuesday
+
+                </label>
+            </div>
+            <div class="form-check">
+                <label class="form-check-label">
+                {{form.wesnesday_1}} Wesnesday
+
+                </label>
+            </div>
+            <div class="form-check">
+                <label class="form-check-label">
+                {{form.thursday_1}} Thursday
+
+                </label>
+            </div>
+            <div class="form-check">
+                <label class="form-check-label">
+                {{form.friday_1}} Friday
+
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary mt-4">Submit</button>
+          </form>
+
+      </div>
+    </div>
+</div>
+
+
+
+{% include "includes/footer.html" %}
+
+</div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}
+
+{% endblock javascripts %}
+

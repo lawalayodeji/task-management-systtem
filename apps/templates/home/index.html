@@ -1,0 +1,174 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} Dashboard {% endblock title %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}
+
+{% endblock stylesheets %}
+
+{% block content %}
+
+    <!-- Header -->
+    <div class="header bg-primary pb-6">
+      <div class="container-fluid">
+        <div class="header-body">
+          <div class="row align-items-center py-4">
+            <div class="col-lg-6 col-7">
+              <h6 class="h2 text-white d-inline-block mb-0">Default</h6>
+              <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+                <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                  <li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
+                  <li class="breadcrumb-item"><a href="#">Dashboards</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">Home</li>
+                </ol>
+              </nav>
+            </div>
+          </div>
+          <!-- Card stats -->
+          <div class="row">
+              <div class="col-xl-3 col-md-6">
+                <div class="card card-stats">
+                  <!-- Card body -->
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col">
+                        <h5 class="card-title text-uppercase text-muted mb-0">Clock-In</h5>
+                      </div>
+                      <div class="col-auto">
+                        <div class="icon icon-shape bg-gradient-green text-white rounded-circle shadow">
+                          <i class="ni ni-active-40"></i>
+                        </div>
+                      </div>
+                    </div>
+                    <form class="form1" method="post">
+                      {% csrf_token %}
+                      <p class="mt-3 mb-0 text-sm">
+                        <button class="btn btn-success btn1" name="Clock-In">Clock-In</button>
+                    </p>
+                  </form>  
+                </div>
+              </div> 
+          </div>
+          <div class="col-xl-3 col-md-6">
+              <div class="card card-stats">
+                <!-- Card body -->
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col">
+                      <h5 class="card-title text-uppercase text-muted mb-0">Clock-Out</h5>
+                    </div>
+                    <div class="col-auto">
+                      <div class="icon icon-shape bg-gradient-red text-white rounded-circle shadow">
+                        <i class="ni ni-active-40"></i>
+                      </div>
+                    </div>
+                  </div>
+                  <form class="form2" method="post">
+                    {% csrf_token %}
+
+                  <p class="mt-3 mb-0 text-sm">
+                    <button  class="btn btn-danger btn2" name="Clock-Out">Clock-out</button>
+                </p>
+              </form>
+
+              </div>
+            </div>
+            
+        </div>
+      </div>
+      </div>
+    </div>
+</div>
+    <!-- Page content -->
+    
+    {% include "includes/footer.html" %}
+
+    </div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}
+    <script>
+
+
+
+// alert_notify()
+    function alert_notify(){
+            $.ajax(
+              {
+              type: "POST",
+              url: "{% url 'count_notifiy'%}",
+              data: {
+                csrfmiddlewaretoken: '{{csrf_token}}',
+            },
+            success: function(data) {
+
+              if(data.my_count != 0){
+                  $('.notify').addClass("text-danger")
+                  $('.notify').html(data.my_count)
+
+              }
+              
+              }
+            })
+      }
+
+
+    setInterval(alert_notify, 500000);
+
+      // $('.btn2').click(function(event){
+          
+      //     $('.btn2').prop('disabled', true)
+      // })          
+
+      $('.btn1').click((event)=>{
+        // $('.form1').submit();
+          event.preventDefault();
+        //   $('.btn1').prop('disabled', true)
+        $.ajax(
+          {
+          type: "POST",
+          url: "./myHome",
+          data: {
+            check: "1",
+            csrfmiddlewaretoken: '{{csrf_token}}',
+        },
+        success: function(data) {
+            
+        // $('.btn1').prop('disabled', true)
+            alert(data.data)
+          }
+        })
+      })
+
+
+
+
+      $('.btn2').click((event)=>{
+        // $('.form1').submit();
+          event.preventDefault();
+        //   $('.btn1').prop('disabled', true)
+        $.ajax(
+          {
+          type: "POST",
+          url: "./myHome",
+          data: {
+            check: "2",
+            csrfmiddlewaretoken: '{{csrf_token}}',
+        },
+        success: function(data) {
+            
+        // $('.btn2').prop('disabled', true)
+            alert(data.data)
+          }
+        })
+      })
+
+    </script>
+
+  <script src="/static/assets/vendor/chart.js/dist/Chart.min.js"></script>
+  <script src="/static/assets/vendor/chart.js/dist/Chart.extension.js"></script>
+
+{% endblock javascripts %}

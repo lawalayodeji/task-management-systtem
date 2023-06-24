@@ -1,0 +1,191 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+
+{% block title %} Employee List {% endblock title %}
+
+{% block content %}
+  <div class="header bg-primary pb-6">
+    <div class="container-fluid">
+      <div class="header-body">
+        <div class="row align-items-center py-4">
+          <div class="col-lg-6 col-7">
+            <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+              <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                <li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
+                <li class="breadcrumb-item"><a href="#">Tasks View</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Tasks List</li>
+              </ol>
+            </nav>
+          </div>
+         </div>
+      </div>
+   </div>
+</div>
+
+<div class="table-responsive">
+<table class="table align-items-center table-flush">
+            <thead class="thead-light">
+            <tr>
+                <th scope="col" class="sort" data-sort="task-name">Task Name</th>
+                <th scope="col" class="sort" data-sort="priority">Priority</th>
+                <th scope="col">Deadline</th>
+                <th scope="col">Description</th>
+                <th scope="col">Startdate</th>
+                <th scope="col">Status</th>
+                {% if user.is_admin %}
+                <th scope="col">Update Tasks</th>
+                <th scope="col">Close Tasks</th>
+                {% endif %}
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <!-- TASK_CHOICES = (
+    (0, "OPEN"),
+    (1, "CLOSE"),
+)
+
+TASK_PRIORITY = (
+    (0, "LOW"),
+    (1, "MEDIUM"),
+    (2, "HIGH"),
+
+) -->
+
+            <tbody class="list">
+                {% if length > 0 %}
+                {% for task in tasks %}
+
+                <td class="name">
+                {{task.Name}}
+                </td>
+                <td>
+                <span class="priority">
+                    <span class="badge badge-dot mr-4">
+                        {% if task.priority == 2 %}
+                        <i class="bg-warning"></i>
+                        <span class="status">High</span>
+                        {% elif task.priority == 1%}
+                            <i class="bg-info"></i>
+                            <span class="status">Medium</span>
+                        {% elif task.priority == 0 %}
+                            <i class="bg-info"></i>
+                            <span class="status">Low</span>
+                        {% endif %}
+                      </span>
+                </span>
+                </td>
+                <td>
+                <div class="deadline">
+                    {{task.deadline}} 
+                </div>
+                </td>
+                <td>
+                    <div class="Description">
+                        {{task.description|safe}} 
+                    </div>
+                </td>
+                <td>
+                    <div class="Startdate">
+                        {{task.startdate}} 
+                    </div>
+                 </td>
+                 <td>
+                    <span class="status">
+                        <span class="badge badge-dot mr-4">
+                            {% if task.status == 1%}
+                            <i class="bg-warning"></i>
+                            <span class="status">close</span>
+                            {% elif task.status == 0 %}
+                                <i class="bg-success"></i>
+                                <span class="status">open</span>
+                            {% endif %}
+                          </span>
+                    </span>
+                 </td>
+                </td>
+
+                
+                {% if user.is_admin %}
+                <td>
+                <form method="post">
+                  {% csrf_token %}
+                  <a class="btn btn-success" href="{%url 'myEditTask' task.id %}">Update</a>
+                </form>
+                </td>
+                <td>
+                <form method="post">
+                  {% csrf_token %}
+
+                  <a class="btn btn-danger" href="{%url 'myCloseTask' task.id %}">Close</a>
+                </form>
+              </td>
+                {% endif %}
+
+                <td class="text-right">
+                <div class="dropdown">
+                    <a class="btn btn-sm btn-icon-only text-info" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-ellipsis-v"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                    <a class="dropdown-item" href="{%url 'task-do' task.id %}">Do Task</a>
+                    </div>
+                 </div>
+                </td>
+            </tr>
+            {% endfor %}
+
+            {% else %}
+                <td>
+            <div class="text-warning">
+                     No Task Yet
+            </div>
+                    
+                </td>
+            {% endif %}
+
+        </tbody>
+
+    </table>
+  </div>
+    
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Page content -->
+    {% include "includes/footer.html" %}
+  
+{% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}
+<script>
+
+    function alert_notify(){
+        $.ajax(
+          {
+          type: "POST",
+          url: "{% url 'count_notifiy'%}",
+          data: {
+            csrfmiddlewaretoken: '{{csrf_token}}',
+        },
+        success: function(data) {
+    
+          if(data.my_count != 0){
+              $('.notify').addClass("text-danger")
+              $('.notify').html(data.my_count)
+    
+          }
+          
+          }
+        })
+    }
+    
+    
+    setInterval(alert_notify, 500000)
+    
+    </script>
+
+{% endblock javascripts %}

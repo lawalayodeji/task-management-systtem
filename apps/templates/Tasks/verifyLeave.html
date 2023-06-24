@@ -1,0 +1,142 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+
+{% block title %} Employee List {% endblock title %}
+
+{% block content %}
+  <div class="header bg-primary pb-6">
+    <div class="container-fluid">
+      <div class="header-body">
+        <div class="row align-items-center py-4">
+          <div class="col-lg-6 col-7">
+            <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+              <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                <li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
+                <li class="breadcrumb-item"><a href="#">Leave</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Leave-list</li>
+              </ol>
+            </nav>
+          </div>
+         </div>
+      </div>
+   </div>
+</div>
+
+<div class="table-responsive">
+<table class="table align-items-center table-flush">
+            <thead class="thead-light">
+            <tr>
+                <th scope="col" class="sort" data-sort="username">Username</th>
+                <th scope="col" class="sort" data-sort="email">Startdate</th>
+                <th scope="col" class="sort" data-sort="email">Enddate</th>
+                <th scope="col">Employee Name</th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody class="list">
+                {% for leave in leaveRequest %}
+
+                <td class="username">
+                {{leave.user.username}}
+                </td>
+                <td>
+                <span class="email">{{leave.startdate}}</span>
+                </td>
+                <td>
+                    <span class="email">{{leave.enddate}}</span>
+                </td>
+                <td>
+                <div class="name">
+                    {{leave.user.first_name|upper}} {{leave.user.last_name|upper}}
+                </div>
+                </td>
+                </td>
+                <td class="text-right">
+                <div class="dropdown">
+                    <a class="btn btn-sm btn-icon-only text-info" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-ellipsis-v"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                    <a class="dropdown-item " id="approve" href="javascript:void(0);"  data-option ='{{ leave.id}}' >Approve</a>
+                    <a class="dropdown-item " id="reject" data-key2 ='{{ leave.id}}'>Reject</a>
+                    </div>
+                 </div>
+                </td>
+            </tr>
+            {% endfor %}
+
+        </tbody>
+    </table>
+  </div>
+    
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Page content -->
+  
+    {% include "includes/footer.html" %}
+
+  
+{% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}
+<script>
+
+
+$('#approve').click((event)=>{
+        // $('.form1').submit();
+        event.preventDefault();
+          
+
+        var myValue = parseInt(event.target.getAttribute('data-option'))
+        $.ajax(
+          {
+          type: "POST",
+          url: "{% url 'myVerTimeoff' %}",
+          data: {
+            mykey: "approve",
+            myId: `${myValue}`,
+
+            csrfmiddlewaretoken: '{{csrf_token}}',
+        },
+        success: function(data) {
+            
+            alert(data.data)
+          }
+        })
+      })
+
+      $('#reject').click((event)=>{
+        // $('.form1').submit();
+        event.preventDefault();
+          
+
+        var myValue = parseInt(event.target.getAttribute('data-key2'))
+        $.ajax(
+          {
+          type: "POST",
+          url: "{% url 'myVerTimeoff' %}",
+          data: {
+            mykey: "reject",
+            myId: `${myValue}`,
+
+            csrfmiddlewaretoken: '{{csrf_token}}',
+        },
+        success: function(data) {
+            
+            alert(data.data)
+          }
+        })
+      })
+
+
+
+
+
+
+</script>
+{% endblock javascripts %}
